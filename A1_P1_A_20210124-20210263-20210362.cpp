@@ -4,14 +4,10 @@
                  20210362   / 20210263  / 20210124
 
 */
-
-
-
-
 #include <iostream>
 using namespace std;
 
-class BigDecimalInt{
+class BigDecimalInt {
 private:
     string number;
     char num_sign;
@@ -21,37 +17,35 @@ private:
 
 public:
     // Empty constructor with default value 0;
-    BigDecimalInt(){
+    BigDecimalInt() {
         number = "\0";
         num_sign = '\0';
         sz = 0;
     }
+
     // Constructor to initialize from integer
-    BigDecimalInt(int n){
+    BigDecimalInt(int n) {
         number = to_string(n);
 
-        if (!checkValidity()){
+        if (!checkValidity()) {
             cout << "invalid, value set to 0" << endl;
             number = "0";
             num_sign = '\0';
-        }
-        else
-        {
+        } else {
             num_sign = sign();
             sz = size();
         }
     }
+
     // Constructor to initialize from string
-    BigDecimalInt(string n){
+    BigDecimalInt(string n) {
         number = n;
 
-        if (!checkValidity()){
+        if (!checkValidity()) {
             cout << "invalid, value set to 0" << endl;
             number = "0";
             num_sign = '\0';
-        }
-        else
-        {
+        } else {
             num_sign = sign();
             sz = size();
         }
@@ -60,16 +54,86 @@ public:
 
 
     // Check if its valid | works
-    bool checkValidity(){
-        for (int i = 0; i < number.size(); i++)
-        {
+    bool checkValidity() {
+        for (int i = 0; i < number.size(); i++) {
             char c = number[i];
-            if ((c == '+' || c == '-') && i != 0 || c == ' ')
+            if ((!isdigit(c)) && i != 0 || c == ' ')
                 return false;
         }
         return true;
     }
     //f
+
+    friend BigDecimalInt operator+(const BigDecimalInt &a, const BigDecimalInt &b) {
+        BigDecimalInt first_number{},second_number{};
+        //----Subtraction Operations
+        if(a.num_sign=='-' && b.num_sign=='-'){
+            second_number = b;
+            second_number.num_sign = '+';
+            return a - second_number;
+        }else if(a.num_sign=='+' && b.num_sign=='-'){
+            return a - b;
+        }else if(a.num_sign=='-' && b.num_sign=='+'){
+            return b - a;
+        //--------------------------
+        }else{
+            //Assign the greater number to the first number
+            if(a.sz>b.sz){
+                first_number = a;
+                second_number = b;
+            }else{
+                first_number = b;
+                second_number = a;
+            }
+            BigDecimalInt result{};
+            int carry = 0;
+            int digit_sum{};
+            int delta = first_number.sz-second_number.sz;
+            //Add the two numbers digit by digit and maintain the carry count
+            for(int i=second_number.sz-1;i>0;i--){
+                digit_sum = (first_number.number[i+delta]-'0') + (second_number.number[i]-'0') + int(carry>0);
+                carry -= carry>0;
+                if(digit_sum>9){
+                    carry++;
+                    digit_sum-=10;
+                }
+                result.number = to_string(digit_sum) + result.number;
+            }
+            //If they are the same length of digits output the final digit without carry
+            if(first_number.sz==second_number.sz){
+                digit_sum = (first_number.number[0]-'0') + (second_number.number[0]-'0') + int(carry>0);
+                result.number = to_string(digit_sum) + result.number;
+                return result;
+            }else{
+                digit_sum = (first_number.number[delta]-'0') + (second_number.number[0]-'0') + int(carry>0);
+                carry -= carry>0;
+                if(digit_sum>9){
+                    carry++;
+                    digit_sum-=10;
+                }
+                //Keep adding remaining digits of the greater number to answer
+                result.number = to_string(digit_sum) + result.number;
+                int pointer = --delta;
+                while (pointer>=0){
+                    digit_sum = first_number.number[pointer]-'0' + int(carry>0);
+                    carry -= carry>0;
+                    if(digit_sum>9 && pointer>0){
+                        digit_sum-=10;
+                        carry++;
+                    }
+                    result.number = to_string(digit_sum) + result.number;
+                    pointer--;
+                }
+                return result;
+            }
+        }
+    }
+
+    friend BigDecimalInt operator - (const BigDecimalInt& a, const BigDecimalInt& b){
+        BigDecimalInt result;
+        return result;
+    }
+
     friend bool operator> (const BigDecimalInt& a, const BigDecimalInt& b)
     {
         if (a.sz > b.sz)
@@ -99,14 +163,13 @@ public:
     }
 
     // //h
-    // BigDecimalInt operator= (BigDecimalInt b)
-    // {
-    //     BigDecimalInt c;
-    //     c.number = b.getNumber();
-    //     c.num_sign = b.getSign();
-    //     c.sz = b.getSize();
-    //     return c;
-    // }
+     BigDecimalInt operator= (const BigDecimalInt& a)
+     {
+         this->number = a.number;
+         this->num_sign = a.num_sign;
+         this->sz = a.sz;
+         return *this;
+     }
 
     //i
     int size(){
@@ -154,10 +217,11 @@ int main()
     while (n--)
     {
         BigDecimalInt x;
-        BigDecimalInt y = {"12"};
-        BigDecimalInt z = {1350};
+        BigDecimalInt y = {"7060"};
+        BigDecimalInt z = {"8050"};
         x = y;
 
+        cout<<y+z<<endl;
 
 
         // cout << y << endl;             // the overloaded operator <<  printed -12 as -12

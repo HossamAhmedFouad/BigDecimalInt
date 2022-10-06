@@ -80,7 +80,9 @@ public:
             return a - b;
         }
         else if (a.num_sign == '-' && b.num_sign == '+') {
-            return b - a;
+            second_number = a;
+            second_number.num_sign = '+';
+            return b - second_number;
             //--------------------------
         }
         else {
@@ -437,11 +439,11 @@ int main()
     {
         BigDecimalInt x;
         BigDecimalInt y = { "-123" };
-        BigDecimalInt z = { "-2131" };
+        BigDecimalInt z = { "-123" };
         x = y;
 
        
-        cout << y - z << endl;
+        cout << y + z << endl;
 
 
         // cout << y << endl;             // the overloaded operator <<  printed -12 as -12

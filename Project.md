@@ -5,7 +5,7 @@
 # Issues 
 
 ## 1- when initialing a class with a number greater than INT_MAX ##gives compiler error
-##BigDecimalInt(long long n ) will be a solution 
+## BigDecimalInt(long long n ) will be a solution 
 
 ## 2- Fixed Operator (>) to work for both Negative and positive ##numbers
 
@@ -13,10 +13,10 @@
 ## x + y >> gives 246 instead of Zero . 
 
 ## 4- There was an logical error regarding setting value to 0 ##when invalid inputs are given , when entering x = "-123" y ##="abc"
-##x - y >> result was 123 , Fixed
+## x - y >> result was 123 , Fixed
 
 ## 5- operator (+) gives logical error regarding setting value ##to 0
-##x = "-123" y = "abc" 
+## x = "-123" y = "abc" 
 ## x + y >> gives 123 instead of -123
 
 
